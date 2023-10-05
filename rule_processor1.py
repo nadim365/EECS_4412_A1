@@ -19,21 +19,22 @@ class RuleGenerator1(object):
         for k,v in self.levels_itemset.items():
             for itemset, supp in v.items():
                 if len(itemset) > 1:
-                    for comb in combinations(itemset, k-1):
-                        rule = []
-                        x = frozenset(comb)
-                        size = len(x)
-                        y = itemset.difference(x)
-                        confidence = supp / self.levels_itemset[size][frozenset(x)]
-                        print(f'X: {x} Y: {y} CONFIDENCE: {confidence}')
-                        if confidence >= confidence_threshold:
-                            rule.append(x)
-                            rule.append(y)
-                            rule.append(supp)
-                            rule.append(confidence)
-                            rule = tuple(rule)
-                            rules.append(rule)
-                            print(f'RULE: {rule}')
+                    for i in range(1, k):
+                        for comb in combinations(itemset, i):
+                            rule = []
+                            x = frozenset(comb)
+                            size = len(x)
+                            y = itemset.difference(x)
+                            confidence = supp / self.levels_itemset[size][frozenset(x)]
+                            print(f'X: {x} Y: {y} CONFIDENCE: {confidence}')
+                            if confidence >= confidence_threshold:
+                                rule.append(x)
+                                rule.append(y)
+                                rule.append(supp)
+                                rule.append(confidence)
+                                rule = tuple(rule)
+                                rules.append(rule)
+                                print(f'RULE: {rule}')
                         
         return rules
         #return rules
@@ -60,7 +61,7 @@ class RuleGenerator1(object):
                 y_supp = self.levels_itemset[1][y]
             #lift = (supp / self.num_transactions) / ((self.levels_itemset[1][x]/ self.num_transactions) * (self.levels_itemset[1][y] / self.num_transactions))
             lift = (supp/self.num_transactions) / ((x_supp / self.num_transactions) * (y_supp / self.num_transactions))
-            if lift > 1:
+            if lift > 1.0:
                 rule = (x, y, supp, conf,)
                 quality_rules.append(rule)
                 print(f'X: {x} Y: {y} CONFIDENCE: {conf}')
