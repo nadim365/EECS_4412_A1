@@ -26,6 +26,7 @@ class RuleGenerator(object):
                         y = set(k)
                         y = y.symmetric_difference(set(x))
                         #print(f'Y: {y}')
+                        print(x)
                         support = v
                         confidence = float(v) / (float(self.levels_itemset[x]))
                         #print(f'CONFIDENCE >>>>> {confidence}')
@@ -34,7 +35,6 @@ class RuleGenerator(object):
                             temp.append(tuple(y))
                             temp.append(support)
                             temp.append(confidence)
-                            print(temp)
                             #self.rules.append((x, y, support, confidence)) 
                             self.rules.append(temp)
 
@@ -47,8 +47,6 @@ class RuleGenerator(object):
         #TODO: This function prunes the misleading rules by using the lift measure and returns the updated list of rules.
         # lift(X => Y) = "confidence(X => Y) / support(Y)" or "P(X and Y) / (P(X) * P(Y))"
         result = []
-        print(self.levels_itemset)
-        print(rules)
         for x, y, support, confidence in rules:
             print(f'BLAHHH')
             temp = [x]
@@ -56,9 +54,6 @@ class RuleGenerator(object):
             tempy = list(y)
             temp = temp + tempy
             temp = set(temp)
-            print(y)
-            print(sorted(temp))
-            print(tempy)
             #lift = self.levels_itemset[tuple(temp)] / self.levels_itemset[y]
             lift = (self.levels_itemset[tuple(sorted(temp))] / self.num_transactions ) / ((self.levels_itemset[(x,)] / self.num_transactions) * (self.levels_itemset[y] / self.num_transactions))
             #lift = self.levels_itemset[tuple(temp)] / self.levels_itemset[y]
@@ -70,8 +65,6 @@ class RuleGenerator(object):
                 temp.append(confidence)
                 result.append(list(temp))
                 #print(lift)
-                print(result)
-        print(self.levels_itemset)
         return result
     
 

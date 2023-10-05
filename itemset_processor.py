@@ -24,38 +24,35 @@ class FrequentItemsetCalculator(object):
                     self.level1Itemset[item] = 1
 
         self.level1Itemset = {
-            frozenset({k}):v
+            k:v
             for k, v in self.level1Itemset.items()
             if v >= self.support_threshold
         }
         #print(f'Level 1 Itemset: {self.level1Itemset}')
-        #temp = {(k,):v for k,v in self.level1Itemset.items()}
-        #self.levels_itemset.update(temp)
-        self.levels_itemset.update(self.level1Itemset)
+        temp = {(k,):v for k,v in self.level1Itemset.items()}
+        self.levels_itemset.update(temp)
         return self.level1Itemset
 
     def generate_candidate(self, k):
         # TODO generate k-itemset candidates from (k-1)-itemset and prunes candidates based on apriori property and returns the list of candidates.
         if k == 2:
-            #print("LEVEL 2 ITEMSET")
+            print("LEVEL 2 ITEMSET")
             c_k = list(combinations(self.level1Itemset, k))
         else:
-            #print(f'LEVEL {k} ITEMSET')
+            print(f'LEVEL {k} ITEMSET')
             c_k = list(combinations(self.candidate_itemset, 2))
-            #c_k = [tuple(set(cand[0] + cand[1])) for cand in c_k if cand[0][:-1] == cand[1][:-1] ]
-            c_k = [tuple(set(cand[0] + cand[1])) for cand in c_k if cand[0][:-1] == cand[1][:-1]]
-            #print(c_k)
+            c_k = [tuple(set(cand[0] + cand[1])) for cand in c_k if cand[0][:-1] == cand[1][:-1] ]
 
         freq_items = {}
         for candidate in c_k:
             for transaction in self.transactions:
-                if frozenset(candidate).issubset(transaction):
-                    if frozenset(candidate) in freq_items:
+                if set(candidate).issubset(transaction):
+                    if candidate in freq_items:
                         #self.candidate_itemset[candidate] += 1
-                        freq_items[frozenset(candidate)] += 1
+                        freq_items[candidate] += 1
                     else:
                         #self.candidate_itemset[candidate] = 1
-                        freq_items[frozenset(candidate)] = 1
+                        freq_items[candidate] = 1
         
         self.candidate_itemset = freq_items.copy()
         #print(self.candidate_itemset)
