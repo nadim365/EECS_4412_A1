@@ -5,10 +5,11 @@ class FileHandlingTools(object):
     def __init__(self, path_to_transactions_file, path_to_name_mapping_file):
         self.path_to_transactions_file: str = path_to_transactions_file
         self.path_to_name_mapping_file: str = path_to_name_mapping_file
-        self.mapping: dict[int, str] = dict()
+        self.mapping: dict[int:str] = dict()
         self.transactions: list[frozenset[int]] = list()
 
     def load_transactions(self):
+        #Reading the mappings for the different items from the mapping file:
         with open(self.path_to_name_mapping_file) as mappings:
             mappingFile = csv.reader(mappings)
             for mapping in mappingFile:
@@ -16,6 +17,7 @@ class FileHandlingTools(object):
 
         mappings.close()
 
+        #Reading the transactions from the given transactions csv file and returning a list of transactions:
         with open(self.path_to_transactions_file) as transactions:
             transactionFile = csv.reader(transactions)
 
@@ -30,6 +32,7 @@ class FileHandlingTools(object):
 
     def id_to_name(self, id):
         # TODO: This function returns the name of the item given its id which is read from the mapping file.
+        #Returning the name of the respective item from the mapping dictionary
         return self.mapping[frozenset({id})]
 
 if __name__ == "__main__":
